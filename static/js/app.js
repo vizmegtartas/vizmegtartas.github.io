@@ -223,7 +223,6 @@ function filterEvents() {
     if (f.trust === "press" && !["press", "social_media"].includes(p.highest_trust_level)) {
       return false;
     }
-    if (f.period === "2026_autumn" && p.started_at < "2026-09-01") return false;
     if (f.period === "2026" && !p.started_at.startsWith("2026-")) return false;
     if (f.period === "2025" && !p.started_at.startsWith("2025-")) return false;
     if (q) {
@@ -242,7 +241,6 @@ function filterRegionalNews() {
     if (item.agency_code === "OVF") return false;
     if (f.vizig !== "ALL" && item.agency_code !== f.vizig) return false;
     if (f.newsCat !== "all" && item.category !== f.newsCat) return false;
-    if (f.period === "2026_autumn" && item.published_date < "2026-09-01") return false;
     if (f.period === "2026" && !item.published_date.startsWith("2026-")) return false;
     if (f.period === "2025" && !item.published_date.startsWith("2025-")) return false;
     if (q) {
@@ -618,7 +616,7 @@ async function init() {
     onSelectVizig: (vizigCode) => selectVizig(vizigCode, true),
   });
   mapView.setVizigData(bundle.vizig);
-  mapView.setRiversData(bundle.rivers);
+  mapView.setRiversData(bundle.rivers, dom.toggleRivers.checked);
   mapView.setEventsPolygons(bundle.eventsPolygons);
 
   // Wire filters (changing a non-VIZIG filter exits an open dossier so the user sees results immediately)

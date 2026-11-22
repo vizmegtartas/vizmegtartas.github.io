@@ -67,8 +67,8 @@ export class MapView {
         ),
       ]),
     };
-    this.activeBasemap = "map";
-    this.baseLayers.map.addTo(this.map);
+    this.activeBasemap = "satellite";
+    this.baseLayers.satellite.addTo(this.map);
 
     this.vizigLayer = null;
     this.riversLayer = null;
@@ -134,10 +134,6 @@ export class MapView {
       onEachFeature: (feature, layer) => {
         const p = feature.properties;
         this.vizigLayerByCode.set(p.vizig_code, layer);
-        layer.bindTooltip(
-          `${p.vizig_code} — ${p.curated_event_count} beavatkozás · ${p.regional_news_count} hír`,
-          { sticky: true },
-        );
         layer.on({
           mouseover: () => {
             if (p.vizig_code !== this.selectedVizigCode) {
@@ -223,7 +219,7 @@ export class MapView {
     }
   }
 
-  setRiversData(geojson) {
+  setRiversData(geojson, visible = false) {
     if (this.riversLayer) this.map.removeLayer(this.riversLayer);
     this.riversLayer = L.geoJSON(geojson, {
       pane: "riversPane",
@@ -233,7 +229,10 @@ export class MapView {
         weight: 2.0,
         opacity: 0.85,
       },
-    }).addTo(this.map);
+    });
+    if (visible) {
+      this.riversLayer.addTo(this.map);
+    }
   }
 
   setEventsPolygons(geojson) {
