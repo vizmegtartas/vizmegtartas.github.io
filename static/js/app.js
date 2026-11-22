@@ -11,7 +11,6 @@ import {
   SOURCE_TYPE_LABELS,
   STATUS_LABELS,
   TRUST_LABELS,
-  copyTextSafe,
   el,
   formatAreaHa,
   formatDateHu,
@@ -82,7 +81,6 @@ const dom = {
   newsList: document.getElementById("news-list"),
   dossierView: document.getElementById("dossier-view"),
   dossierBackBtn: document.getElementById("dossier-back-btn"),
-  dossierCopyBtn: document.getElementById("dossier-copy-btn"),
   dossierContent: document.getElementById("dossier-content"),
   ovfDialog: document.getElementById("ovf-dialog"),
   ovfCatFilter: document.getElementById("ovf-cat-filter"),
@@ -688,14 +686,6 @@ async function init() {
 
   // Dossier actions
   dom.dossierBackBtn.addEventListener("click", closeDossier);
-  dom.dossierCopyBtn.addEventListener("click", async () => {
-    const ok = await copyTextSafe(window.location.href);
-    const prev = dom.dossierCopyBtn.textContent;
-    dom.dossierCopyBtn.textContent = ok ? "Link kimásolva" : "Másolás sikertelen";
-    setTimeout(() => {
-      dom.dossierCopyBtn.textContent = prev;
-    }, 1800);
-  });
 
   // Map overlay controls
   for (const btn of dom.basemapBtns) {
