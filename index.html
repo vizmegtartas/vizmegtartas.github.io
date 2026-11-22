@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <meta name="description" content="Magyarországi vízvisszatartási események, árapasztó tározók, holtágfeltöltések és területi vízügyi hírek országos térképe (2025–2026)." />
+  <link rel="canonical" href="https://vizmegtartas.github.io/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Magyarországi Vízvisszatartási Térkép" />
+  <meta property="og:locale" content="hu_HU" />
+  <meta property="og:url" content="https://vizmegtartas.github.io/" />
+  <meta property="og:title" content="Magyarországi Vízvisszatartási Esemény- és Hírtérkép (2025–2026)" />
+  <meta property="og:description" content="118 kurált vízvisszatartási beavatkozás (150,85 millió m³ összesített térfogat) és 131 vízügyi igazgatósági hír interaktív térképen." />
+  <meta property="og:image" content="https://vizmegtartas.github.io/static/og-preview.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <title>Magyarországi Vízvisszatartási Esemény- és Hírtérkép</title>
+  <link rel="icon" type="image/svg+xml" href="./static/favicon.svg" />
+  <link rel="preload" href="./static/vendor/fonts/google-sans-flex-latin-ext-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="./static/vendor/fonts/google-sans-flex-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="./static/vendor/leaflet.css" />
+  <link rel="stylesheet" href="./static/vendor/MarkerCluster.css" />
+  <link rel="stylesheet" href="./static/vendor/MarkerCluster.Default.css" />
+  <link rel="stylesheet" href="./static/css/main.css" />
+</head>
+<body data-mode="static" data-asset-prefix="./static">
+  <div id="map" class="map-canvas" aria-label="Interaktív vízügyi térkép"></div>
+
+  <div class="search-card" role="search">
+    <label class="visually-hidden" for="search-input">Keresés név, település vagy leírás alapján</label>
+    <input id="search-input" type="search" class="search-input" placeholder="Keresés: település, tározó, folyó" autocomplete="off" />
+    <button type="button" id="filters-toggle" class="search-action" popovertarget="filters-popover">
+      Szűrők <span class="filters-count" id="filters-active-count" hidden></span>
+    </button>
+  </div>
+
+  <button type="button" id="type-filter-btn" class="floating-pill type-filter-btn" popovertarget="type-popover">
+    <span id="type-filter-dot" class="type-dot" hidden></span>
+    <span id="type-filter-label">Beavatkozás: Mind</span>
+  </button>
+
+  <div id="type-popover" popover class="floating-card type-popover" role="group" aria-label="Beavatkozás típusa">
+    <button type="button" class="chip is-active" data-type="all" aria-pressed="true">Mind</button>
+    <button type="button" class="chip chip-emergency" data-type="emergency_opening" aria-pressed="false">Árapasztó tározó nyitása</button>
+    <button type="button" class="chip chip-reservoir" data-type="reservoir_filling" aria-pressed="false">Tározó / tó feltöltése</button>
+    <button type="button" class="chip chip-landscape" data-type="landscape_inundation" aria-pressed="false">Táji elárasztás</button>
+    <button type="button" class="chip chip-oxbow" data-type="oxbow_channel_filling" aria-pressed="false">Holtág / csatorna pótlása</button>
+    <button type="button" class="chip chip-sluice" data-type="sluice_retention" aria-pressed="false">Medertározás / zsilip</button>
+  </div>
+
+  <div id="filters-popover" popover class="floating-card filters-popover">
+    <h2 class="popover-title">Szűrők</h2>
+    <div class="filter-stack">
+      <label class="filter-field">
+        <span class="filter-label">VIZIG terület</span>
+        <select id="filter-vizig">
+          <option value="ALL">Összes (12 VIZIG)</option>
+          <option value="ADUVIZIG">ADUVIZIG</option>
+          <option value="ATIVIZIG">ATIVIZIG</option>
+          <option value="DDVIZIG">DDVIZIG</option>
+          <option value="EDUVIZIG">EDUVIZIG</option>
+          <option value="EMVIZIG">EMVIZIG</option>
+          <option value="FETIVIZIG">FETIVIZIG</option>
+          <option value="KDTVIZIG">KDTVIZIG</option>
+          <option value="KDVVIZIG">KDVVIZIG</option>
+          <option value="KOTIVIZIG">KOTIVIZIG</option>
+          <option value="KOVIZIG">KOVIZIG</option>
+          <option value="NYUDUVIZIG">NYUDUVIZIG</option>
+          <option value="TIVIZIG">TIVIZIG</option>
+          
+        </select>
+      </label>
+
+      <label class="filter-field">
+        <span class="filter-label">Forrás</span>
+        <select id="filter-trust">
+          <option value="all">Minden forrás</option>
+          <option value="official">Csak hivatalos OVF / VIZIG</option>
+          <option value="press">Sajtó / közösségi alapú</option>
+        </select>
+      </label>
+
+      <label class="filter-field">
+        <span class="filter-label">Időszak</span>
+        <select id="filter-period">
+          <option value="all">Összes (2025–2026)</option>
+          <option value="2026_autumn">2026 ősz (szept.–nov.)</option>
+          <option value="2026">2026 összes</option>
+          <option value="2025">2025 összes</option>
+        </select>
+      </label>
+
+      <label class="filter-field">
+        <span class="filter-label">Hírkategória (területi hírek)</span>
+        <select id="filter-news-cat">
+          <option value="all">Összes kategória</option>
+          <option value="regional_update">Igazgatósági helyzetkép</option>
+          <option value="explainer">Szakmai háttérmagyarázó</option>
+          <option value="program_forum">Programok és projektek</option>
+        </select>
+      </label>
+    </div>
+    <div class="popover-footer">
+      <button type="button" id="reset-filters-btn" class="btn-text" hidden>Szűrők törlése</button>
+    </div>
+  </div>
+
+  <aside id="side-panel" class="side-panel floating-card" data-state="open" data-sheet="peek" aria-label="Eseménylista és területi hírek">
+    <button type="button" id="sheet-handle" class="sheet-handle" aria-expanded="false" aria-controls="panel-scroll">
+      <span class="sheet-grip" aria-hidden="true"></span>
+      <span>Lista · <span id="mobile-list-count">235</span> találat</span>
+    </button>
+
+    <div class="panel-scroll scroll-pane" id="panel-scroll">
+      <header class="panel-header" id="panel-header">
+        <h1 class="panel-title">Magyarországi Vízvisszatartási Térkép</h1>
+        <p class="panel-sub">Frissítve: 2026.11.22.</p>
+        <dl class="panel-kpis" aria-label="Összesített országos mutatók">
+          <div class="kpi">
+            <dt class="kpi-label">beavatkozás</dt>
+            <dd class="kpi-value" id="kpi-events">118</dd>
+          </div>
+          <div class="kpi">
+            <dt class="kpi-label">közölt víztérfogat</dt>
+            <dd class="kpi-value" id="kpi-volume">150,85 M m³</dd>
+          </div>
+          <div class="kpi">
+            <dt class="kpi-label">forrás</dt>
+            <dd class="kpi-value" id="kpi-sources">197</dd>
+          </div>
+        </dl>
+      </header>
+
+      <section class="vizig-banner" id="vizig-banner" hidden aria-live="polite">
+        <div class="vizig-banner-head">
+          <div>
+            <span class="vizig-code-badge" id="vizig-banner-code"></span>
+            <h2 class="vizig-banner-title" id="vizig-banner-name"></h2>
+          </div>
+          <button type="button" class="btn-text" id="vizig-clear-btn">Teljes ország</button>
+        </div>
+        <p class="vizig-banner-meta" id="vizig-banner-meta"></p>
+        <div class="vizig-banner-links">
+          <span class="vizig-banner-counts" id="vizig-banner-counts"></span>
+          <a id="vizig-banner-site" href="#" target="_blank" rel="noopener noreferrer">Hivatalos portál</a>
+        </div>
+      </section>
+
+      <div class="panel-body" id="panel-body">
+        <div id="list-tabs-view" class="list-tabs-view">
+          <div class="tablist" role="tablist" focusgroup="tablist nomemory" aria-label="Területi tartalomfülek">
+            <button type="button" role="tab" id="tab-events" aria-selected="true" focusgroupstart>
+              Beavatkozások <span class="tab-badge" id="tab-events-count">118</span>
+            </button>
+            <button type="button" role="tab" id="tab-news" aria-selected="false">
+              Területi hírek <span class="tab-badge" id="tab-news-count">117</span>
+            </button>
+          </div>
+
+          <section role="tabpanel" id="panel-events" aria-labelledby="tab-events" class="tabpanel">
+            <div id="events-list" class="card-stack"></div>
+          </section>
+
+          <section role="tabpanel" id="panel-news" aria-labelledby="tab-news" class="tabpanel" hidden="until-found">
+            <p class="news-note">Az igazgatóság területére kattintva az ott megjelent, helyhez nem köthető cikkek is szűrődnek.</p>
+            <div id="news-list" class="card-stack"></div>
+          </section>
+        </div>
+
+        <section id="dossier-view" class="dossier-view" hidden aria-label="Kiválasztott esemény részletei">
+          <div class="dossier-nav">
+            <button type="button" class="btn-text" id="dossier-back-btn">Vissza a listához</button>
+            <button type="button" class="btn-text" id="dossier-copy-btn">Link másolása</button>
+          </div>
+          <article id="dossier-content" class="dossier-content"></article>
+        </section>
+      </div>
+
+      <footer class="panel-footer-links">
+        <button type="button" class="btn-text" command="show-modal" commandfor="ovf-dialog">Országos (OVF) hírek (14)</button>
+      </footer>
+    </div>
+  </aside>
+
+  <button type="button" id="panel-toggle" class="panel-toggle" aria-controls="side-panel" aria-expanded="true" aria-label="Lista elrejtése" title="Lista elrejtése">
+    <span class="panel-toggle-chevron" aria-hidden="true"></span>
+  </button>
+
+  <nav class="top-right-actions" aria-label="Országos hírek">
+    <button type="button" class="floating-pill" id="open-ovf-btn" command="show-modal" commandfor="ovf-dialog">
+      Országos (OVF) hírek <span class="btn-badge" id="ovf-count">14</span>
+    </button>
+  </nav>
+
+  <div class="map-controls-br">
+    <button type="button" class="floating-pill" id="layers-toggle" popovertarget="layers-popover">Rétegek</button>
+  </div>
+
+  <div id="layers-popover" popover class="floating-card layers-popover">
+    <h2 class="popover-title">Alaptérkép</h2>
+    <div class="basemap-switch" role="group" aria-label="Alaptérkép választó">
+      <button type="button" class="basemap-btn is-active" data-basemap="map" aria-pressed="true">Térkép</button>
+      <button type="button" class="basemap-btn" data-basemap="satellite" aria-pressed="false">Műhold</button>
+    </div>
+
+    <h2 class="popover-title">Rétegek</h2>
+    <div class="layer-toggles">
+      <label class="layer-check">
+        <input type="checkbox" id="toggle-vizig" checked />
+        <span>VIZIG határok</span>
+      </label>
+      <label class="layer-check">
+        <input type="checkbox" id="toggle-rivers" checked />
+        <span>Fő folyók</span>
+      </label>
+      <label class="layer-check">
+        <input type="checkbox" id="toggle-ref" />
+        <span>További tározók (esemény nélkül)</span>
+      </label>
+    </div>
+
+    <h2 class="popover-title">Jelmagyarázat</h2>
+    <ul class="legend-list">
+      <li><span class="legend-symbol symbol-emergency"></span> Árapasztó tározó nyitása</li>
+      <li><span class="legend-symbol symbol-reservoir"></span> Tározó / tó feltöltése</li>
+      <li><span class="legend-symbol symbol-landscape"></span> Táji elárasztás</li>
+      <li><span class="legend-symbol symbol-oxbow"></span> Holtág / csatorna pótlása</li>
+      <li><span class="legend-symbol symbol-sluice"></span> Medertározás / zsilip</li>
+      <li><span class="legend-symbol symbol-border"></span> Országhatár</li>
+      <li><span class="legend-symbol symbol-vizig-selected"></span> Kijelölt VIZIG határ</li>
+    </ul>
+  </div>
+
+  <dialog id="ovf-dialog" class="app-dialog" closedby="any" aria-labelledby="ovf-dialog-title">
+    <header class="dialog-head">
+      <div>
+        <h2 id="ovf-dialog-title">Országos Vízügyi Főigazgatóság (OVF) hírek</h2>
+        <p class="dialog-sub">Országos szintű vízmegtartási hírek, szakmai elemzések és projektek</p>
+      </div>
+      <form method="dialog">
+        <button type="submit" value="close" class="dialog-close" aria-label="Bezárás" autofocus>Bezárás</button>
+      </form>
+    </header>
+    <div class="dialog-body scroll-pane">
+      <div class="ovf-filter-bar">
+        <label class="filter-field">
+          <span class="filter-label">Kategória</span>
+          <select id="ovf-cat-filter">
+            <option value="all">Összes OVF hír</option>
+            <option value="regional_update">Országos helyzetkép</option>
+            <option value="explainer">Szakmai elemzés</option>
+            <option value="program_forum">Konferencia és program</option>
+          </select>
+        </label>
+      </div>
+      <div id="ovf-news-list" class="card-stack"></div>
+    </div>
+  </dialog>
+
+  <div id="live-status" class="visually-hidden" aria-live="polite"></div>
+
+  <script src="./static/vendor/leaflet.js"></script>
+  <script src="./static/vendor/leaflet.markercluster.js"></script>
+  <script type="module" src="./static/js/app.js"></script>
+</body>
+</html>
