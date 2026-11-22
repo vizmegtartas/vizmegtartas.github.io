@@ -103,6 +103,14 @@ function announce(message) {
   });
 }
 
+function trackAnalytics(path, title) {
+  window.goatcounter?.count({
+    path,
+    title,
+    event: true,
+  });
+}
+
 function withTransition(fn, direction) {
   if (
     !document.startViewTransition ||
@@ -481,6 +489,7 @@ function selectEvent(eventId, flyMap = true) {
     mapView.focusEvent(feature, false);
   }
   syncUrlParams();
+  trackAnalytics(`event/${eventId}`, feature.properties.facility_name);
   announce(`Kiválasztott esemény: ${feature.properties.facility_name}`);
 }
 
@@ -512,6 +521,7 @@ function selectVizig(vizigCode, zoomMap = true) {
     if (eventsVisible === 0 && newsVisible > 0) {
       switchTab("news");
     }
+    trackAnalytics(`vizig/${normalized}`, normalized);
     announce(`${normalized} kiválasztva: ${eventsVisible} térképi beavatkozás és ${newsVisible} területi hír.`);
   }
 }
