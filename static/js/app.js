@@ -413,21 +413,13 @@ function renderDossier(feature) {
 
   const summary = el("p", "dossier-summary", p.summary);
 
-  const satBtn = el("button", "btn-primary satellite-action", "Megnézem műholdképen");
-  satBtn.type = "button";
-  satBtn.addEventListener("click", () => {
-    setBasemapUi("satellite");
-    setMobileView("map");
-    mapView.focusEvent(feature, true);
-  });
-
   const srcHeading = el(
     "h3",
     "sources-heading",
     `Összegyűjtött források (${p.sources.length})`,
   );
 
-  dom.dossierContent.append(overline, title, subtitle, metrics, summary, satBtn, srcHeading);
+  dom.dossierContent.append(overline, title, subtitle, metrics, summary, srcHeading);
 
   const listWrap = el("div", "card-stack");
   for (const src of p.sources) {
