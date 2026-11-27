@@ -71,6 +71,7 @@ export class MapView {
     this.baseLayers.satellite.addTo(this.map);
 
     this.vizigLayer = null;
+    this.vizigHaloLayer = null;
     this.riversLayer = null;
     this.borderLayer = L.layerGroup([
       L.geoJSON(HUNGARY_BORDER_GEOJSON, {
@@ -125,8 +126,20 @@ export class MapView {
   }
 
   setVizigData(geojson) {
+    if (this.vizigHaloLayer) this.map.removeLayer(this.vizigHaloLayer);
     if (this.vizigLayer) this.map.removeLayer(this.vizigLayer);
     this.vizigLayerByCode.clear();
+
+    this.vizigHaloLayer = L.geoJSON(geojson, {
+      pane: "vizigPane",
+      interactive: false,
+      style: {
+        color: "#FFFFFF",
+        weight: 4.5,
+        opacity: 0.72,
+        fill: false,
+      },
+    }).addTo(this.map);
 
     this.vizigLayer = L.geoJSON(geojson, {
       pane: "vizigPane",
@@ -160,11 +173,12 @@ export class MapView {
   _vizigStyle(code, hovered) {
     const isSelected = code === this.selectedVizigCode;
     return {
-      color: isSelected ? "#D97706" : hovered ? "#0B5D7A" : "#64748B",
-      weight: isSelected ? 3.8 : hovered ? 2.5 : 1.4,
-      dashArray: isSelected || hovered ? null : "5 4",
-      fillColor: isSelected ? "#F59E0B" : hovered ? "#0B5D7A" : "#94A3B8",
-      fillOpacity: isSelected ? 0.14 : hovered ? 0.07 : 0.02,
+      color: isSelected ? "#D97706" : "#9F1239",
+      weight: isSelected ? 3.8 : hovered ? 3.0 : 2.2,
+      opacity: isSelected ? 0.98 : hovered ? 0.96 : 0.9,
+      dashArray: null,
+      fillColor: isSelected ? "#F59E0B" : "#9F1239",
+      fillOpacity: isSelected ? 0.14 : hovered ? 0.08 : 0.02,
     };
   }
 
@@ -352,7 +366,18 @@ export class MapView {
   }
 
   toggleOverlayLayer(name, visible) {
-    const layer = name === "vizig" ? this.vizigLayer : this.riversLayer;
+    if (name === "vizig") {
+      const layers = [this.vizigHaloLayer, this.vizigLayer].filter(Boolean);
+      for (const layer of layers) {
+        if (visible && !this.map.hasLayer(layer)) {
+          layer.addTo(this.map);
+        } else if (!visible && this.map.hasLayer(layer)) {
+          this.map.removeLayer(layer);
+        }
+      }
+      return;
+    }
+    const layer = this.riversLayer;
     if (!layer) return;
     if (visible && !this.map.hasLayer(layer)) {
       layer.addTo(this.map);

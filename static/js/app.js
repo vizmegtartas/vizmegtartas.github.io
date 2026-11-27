@@ -94,6 +94,9 @@ const dom = {
   metaLastUpdated: document.getElementById("meta-last-updated"),
   authorProfileLink: document.getElementById("author-profile-link"),
   contactReportLink: document.getElementById("contact-report-link"),
+  layersToggle: document.getElementById("layers-toggle"),
+  layersPopover: document.getElementById("layers-popover"),
+  layersCloseBtn: document.getElementById("layers-close-btn"),
 };
 
 const client = new DataClient(document.body.dataset.mode || "api");
@@ -719,6 +722,28 @@ async function init() {
     const refData = checked ? await client.loadReferenceFacilities() : null;
     mapView.setReferenceLayer(refData, checked);
   });
+
+  if (dom.layersPopover && dom.layersToggle) {
+    dom.layersPopover.addEventListener("toggle", (e) => {
+      dom.layersToggle.setAttribute("aria-expanded", e.newState === "open" ? "true" : "false");
+    });
+    dom.layersCloseBtn?.addEventListener("click", () => {
+      queueMicrotask(() => dom.layersToggle.focus());
+    });
+    document.addEventListener("keydown", (e) => {
+      if (
+        e.key === "Escape" &&
+        !dom.ovfDialog?.open &&
+        dom.layersPopover.matches(":popover-open")
+      ) {
+        const focusInside = dom.layersPopover.contains(document.activeElement);
+        dom.layersPopover.hidePopover();
+        if (focusInside) {
+          dom.layersToggle.focus();
+        }
+      }
+    });
+  }
 
   dom.ovfCatFilter.addEventListener("change", renderOvfNewsModal);
   dom.ovfDialog.addEventListener("close", () => {

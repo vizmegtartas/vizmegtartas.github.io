@@ -440,6 +440,29 @@ button {
   anchor-name: --layers-btn;
 }
 
+#layers-toggle[aria-expanded="true"] {
+  background: var(--hydro-soft);
+  color: var(--hydro-deep);
+}
+
+.popover-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.popover-head .popover-title {
+  margin: 0;
+}
+
+.popover-close-btn {
+  padding: 4px 10px;
+  margin: -4px -10px -4px 0;
+  font-size: 13px;
+}
+
 .popover-title {
   font-size: 14px;
   font-weight: 600;
@@ -612,6 +635,15 @@ select:focus-visible {
   border-radius: 2px;
   background: #9F1239;
   box-shadow: 0 0 0 1.5px #FFFFFF, 0 0 0 2.5px rgb(16 36 48 / 0.22);
+}
+
+.symbol-vizig-border {
+  width: 16px;
+  height: 2.5px;
+  border: 0;
+  border-radius: 2px;
+  background: #9F1239;
+  box-shadow: 0 0 0 1px #FFFFFF, 0 0 0 2px rgb(16 36 48 / 0.2);
 }
 
 .symbol-vizig-selected {

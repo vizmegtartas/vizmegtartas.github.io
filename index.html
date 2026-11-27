@@ -201,11 +201,14 @@
   </nav>
 
   <div class="map-controls-br">
-    <button type="button" class="floating-pill" id="layers-toggle" popovertarget="layers-popover">Rétegek</button>
+    <button type="button" class="floating-pill" id="layers-toggle" popovertarget="layers-popover" aria-expanded="false">Rétegek</button>
   </div>
 
-  <div id="layers-popover" popover class="floating-card layers-popover">
-    <h2 class="popover-title">Alaptérkép</h2>
+  <div id="layers-popover" popover="manual" class="floating-card layers-popover">
+    <div class="popover-head">
+      <h2 class="popover-title">Alaptérkép</h2>
+      <button type="button" id="layers-close-btn" class="btn-text popover-close-btn" popovertarget="layers-popover" popovertargetaction="hide" aria-label="Rétegek panel bezárása">Bezárás</button>
+    </div>
     <div class="basemap-switch" role="group" aria-label="Alaptérkép választó">
       <button type="button" class="basemap-btn" data-basemap="map" aria-pressed="false">Térkép</button>
       <button type="button" class="basemap-btn is-active" data-basemap="satellite" aria-pressed="true">Műhold</button>
@@ -235,6 +238,7 @@
       <li><span class="legend-symbol symbol-oxbow"></span> Holtág / csatorna pótlása</li>
       <li><span class="legend-symbol symbol-sluice"></span> Medertározás / zsilip</li>
       <li><span class="legend-symbol symbol-border"></span> Országhatár</li>
+      <li><span class="legend-symbol symbol-vizig-border"></span> VIZIG határ</li>
       <li><span class="legend-symbol symbol-vizig-selected"></span> Kijelölt VIZIG határ</li>
     </ul>
   </div>
