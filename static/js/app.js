@@ -91,6 +91,9 @@ const dom = {
   toggleRef: document.getElementById("toggle-ref"),
   basemapBtns: [...document.querySelectorAll(".basemap-btn")],
   mobileListCount: document.getElementById("mobile-list-count"),
+  metaLastUpdated: document.getElementById("meta-last-updated"),
+  authorProfileLink: document.getElementById("author-profile-link"),
+  contactReportLink: document.getElementById("contact-report-link"),
 };
 
 const client = new DataClient(document.body.dataset.mode || "api");
@@ -605,6 +608,17 @@ async function init() {
 
   const bundle = await client.loadInitialBundle();
   state.bundle = bundle;
+
+  if (dom.metaLastUpdated && bundle.stats?.last_updated) {
+    dom.metaLastUpdated.setAttribute("datetime", bundle.stats.last_updated);
+    dom.metaLastUpdated.textContent = `${bundle.stats.last_updated.replaceAll("-", ".")}.`;
+  }
+  dom.authorProfileLink?.addEventListener("click", () => {
+    trackAnalytics("author/linkedin", "Deák Tamás LinkedIn");
+  });
+  dom.contactReportLink?.addEventListener("click", () => {
+    trackAnalytics("author/contact", "Hiányzó helyszín jelzése");
+  });
 
   for (const feat of bundle.vizig.features) {
     state.vizigMetaByCode.set(feat.properties.vizig_code, feat.properties);

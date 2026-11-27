@@ -677,10 +677,54 @@ select:focus-visible {
   text-wrap: balance;
 }
 
-.panel-sub {
-  margin-top: 6px;
-  font-size: 14px;
+.panel-meta {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  font-size: 13px;
   color: var(--ink-muted);
+}
+
+.meta-updated-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  background: var(--hydro-soft);
+  color: var(--hydro-deep);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+.meta-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--hydro-deep);
+  flex-shrink: 0;
+}
+
+.meta-author {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.meta-author-link {
+  color: var(--ink-primary);
+  font-weight: 500;
+  text-decoration: underline;
+  text-decoration-color: var(--border-strong);
+  text-underline-offset: 3px;
+  transition: color var(--dur-fast) ease, text-decoration-color var(--dur-fast) ease;
+}
+
+.meta-author-link:hover {
+  color: var(--hydro-deep);
+  text-decoration-color: var(--hydro-deep);
 }
 
 .panel-kpis {
@@ -1341,7 +1385,32 @@ dialog:modal {
 }
 
 .panel-footer-links {
-  display: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 16px;
+  padding: 12px 24px 16px;
+  margin-top: auto;
+  border-top: 1px solid var(--border-subtle);
+  font-size: 13px;
+}
+
+.footer-contact-link {
+  color: var(--hydro-deep);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.footer-contact-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@media (min-width: 768px) {
+  .mobile-only-btn {
+    display: none;
+  }
 }
 
 /* ---------- Top-layer animációk (popover + dialog) ---------- */

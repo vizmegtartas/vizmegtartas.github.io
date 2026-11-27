@@ -4,6 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <meta name="author" content="Deák Tamás" />
   <meta name="description" content="Magyarországi vízvisszatartási események, árapasztó tározók, holtágfeltöltések és területi vízügyi hírek országos térképe (2025–2026)." />
   <link rel="canonical" href="https://vizmegtartas.github.io/" />
   <meta property="og:type" content="website" />
@@ -11,7 +12,7 @@
   <meta property="og:locale" content="hu_HU" />
   <meta property="og:url" content="https://vizmegtartas.github.io/" />
   <meta property="og:title" content="Magyarországi Vízvisszatartási Esemény- és Hírtérkép (2025–2026)" />
-  <meta property="og:description" content="118 kurált vízvisszatartási beavatkozás (150,85 millió m³ összesített térfogat) és 131 vízügyi igazgatósági hír interaktív térképen." />
+  <meta property="og:description" content="121 kurált vízvisszatartási beavatkozás (154,49 millió m³ összesített térfogat) és 132 vízügyi igazgatósági hír interaktív térképen." />
   <meta property="og:image" content="https://vizmegtartas.github.io/static/og-preview.png" />
   <meta name="twitter:card" content="summary_large_image" />
   <title>Magyarországi Vízvisszatartási Esemény- és Hírtérkép</title>
@@ -107,25 +108,33 @@
   <aside id="side-panel" class="side-panel floating-card" data-state="open" data-sheet="peek" aria-label="Eseménylista és területi hírek">
     <button type="button" id="sheet-handle" class="sheet-handle" aria-expanded="false" aria-controls="panel-scroll">
       <span class="sheet-grip" aria-hidden="true"></span>
-      <span>Lista · <span id="mobile-list-count">235</span> találat</span>
+      <span>Lista · <span id="mobile-list-count">239</span> találat</span>
     </button>
 
     <div class="panel-scroll scroll-pane" id="panel-scroll">
       <header class="panel-header" id="panel-header">
         <h1 class="panel-title">Magyarországi Vízvisszatartási Esemény- és Hírtérkép</h1>
-        <p class="panel-sub">Frissítve: 2026.11.22.</p>
+        <div class="panel-meta">
+          <span class="meta-updated-pill">
+            <span class="meta-dot" aria-hidden="true"></span>
+            Adatok frissítve: <time id="meta-last-updated" datetime="2026-11-27">2026.11.27.</time>
+          </span>
+          <span class="meta-author">
+            Készítette: <a id="author-profile-link" class="meta-author-link" href="https://www.linkedin.com/in/de%C3%A1k-tam%C3%A1s-65982a170/" target="_blank" rel="author noopener noreferrer">Deák Tamás</a>
+          </span>
+        </div>
         <dl class="panel-kpis" aria-label="Összesített országos mutatók">
           <div class="kpi">
             <dt class="kpi-label">beavatkozás</dt>
-            <dd class="kpi-value" id="kpi-events">118</dd>
+            <dd class="kpi-value" id="kpi-events">121</dd>
           </div>
           <div class="kpi">
             <dt class="kpi-label">közölt víztérfogat</dt>
-            <dd class="kpi-value" id="kpi-volume">150,85 M m³</dd>
+            <dd class="kpi-value" id="kpi-volume">154,49 M m³</dd>
           </div>
           <div class="kpi">
             <dt class="kpi-label">forrás</dt>
-            <dd class="kpi-value" id="kpi-sources">197</dd>
+            <dd class="kpi-value" id="kpi-sources">201</dd>
           </div>
         </dl>
       </header>
@@ -149,10 +158,10 @@
         <div id="list-tabs-view" class="list-tabs-view">
           <div class="tablist" role="tablist" focusgroup="tablist nomemory" aria-label="Területi tartalomfülek">
             <button type="button" role="tab" id="tab-events" aria-selected="true" focusgroupstart>
-              Beavatkozások <span class="tab-badge" id="tab-events-count">118</span>
+              Beavatkozások <span class="tab-badge" id="tab-events-count">121</span>
             </button>
             <button type="button" role="tab" id="tab-news" aria-selected="false">
-              Területi hírek <span class="tab-badge" id="tab-news-count">117</span>
+              Területi hírek <span class="tab-badge" id="tab-news-count">118</span>
             </button>
           </div>
 
@@ -175,7 +184,8 @@
       </div>
 
       <footer class="panel-footer-links">
-        <button type="button" class="btn-text" command="show-modal" commandfor="ovf-dialog">Országos (OVF) hírek (14)</button>
+        <a id="contact-report-link" class="footer-contact-link" href="mailto:tdeak93@gmail.com?subject=V%C3%ADzvisszatart%C3%A1si%20t%C3%A9rk%C3%A9p%20%E2%80%93%20helysz%C3%ADn%20jelz%C3%A9se">Hiányzó helyszín jelzése</a>
+        <button type="button" class="btn-text mobile-only-btn" command="show-modal" commandfor="ovf-dialog">Országos (OVF) hírek (14)</button>
       </footer>
     </div>
   </aside>
