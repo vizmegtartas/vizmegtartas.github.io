@@ -50,22 +50,13 @@ export class MapView {
         attribution:
           '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> közreműködők',
       }),
-      satellite: L.layerGroup([
-        L.tileLayer(
-          "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-          {
-            maxZoom: 18,
-            attribution: "Tiles &copy; Esri &mdash; Esri, Maxar, Earthstar Geographics",
-          },
-        ),
-        L.tileLayer(
-          "https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}",
-          {
-            maxZoom: 18,
-            opacity: 0.85,
-          },
-        ),
-      ]),
+      satellite: L.tileLayer(
+        "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+        {
+          maxZoom: 18,
+          attribution: "Tiles &copy; Esri &mdash; Esri, Maxar, Earthstar Geographics",
+        },
+      ),
     };
     this.activeBasemap = "satellite";
     this.baseLayers.satellite.addTo(this.map);
